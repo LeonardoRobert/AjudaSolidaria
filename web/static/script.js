@@ -13,32 +13,43 @@ function carregarItens() {
         `;
         lista.appendChild(li);
       });
-    });
+    })
+    .catch(err => console.error('Erro ao carregar itens:', err));
 }
 
 function adicionarItem() {
   const nome = document.getElementById("nomeItem").value;
   const quantidade = document.getElementById("quantidade").value;
 
+  if (!nome || !quantidade) {
+    alert('Por favor, preencha nome e quantidade.');
+    return;
+  }
+
   fetch("/api/itens", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ nome, quantidade })
-  }).then(() => {
+  })
+  .then(() => {
     carregarItens();
     document.getElementById("nomeItem").value = "";
     document.getElementById("quantidade").value = "";
-  });
+  })
+  .catch(err => console.error('Erro ao adicionar item:', err));
 }
 
 function marcarEntregue(id) {
   fetch(`/api/itens/${id}`, { method: "PUT" })
-    .then(() => carregarItens());
+    .then(() => carregarItens())
+    .catch(err => console.error('Erro ao marcar entregue:', err));
 }
 
 function excluirItem(id) {
   fetch(`/api/itens/${id}`, { method: "DELETE" })
-    .then(() => carregarItens());
+    .then(() => carregarItens())
+    .catch(err => console.error('Erro ao excluir item:', err));
 }
 
-carregarItens();
+// Carrega os itens quando a página carregar
+window.onload = carregarItens;
