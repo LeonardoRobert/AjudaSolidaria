@@ -1,11 +1,8 @@
-# app.py
-
 from flask import Flask, render_template, request, redirect, jsonify
 import sqlite3
 import os
 
 app = Flask(__name__)
-
 
 def init_db():
     if not os.path.exists('database.db'):
@@ -16,7 +13,7 @@ def init_db():
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome TEXT NOT NULL,
                 quantidade INTEGER NOT NULL,
-                status TEXT DEFAULT 'Disponível'
+                status TEXT NOT NULL DEFAULT 'Disponível'
             )
         """)
         conn.commit()
@@ -64,19 +61,5 @@ def excluir_item(item_id):
     return jsonify({"message": "Item excluído com sucesso!"})
 
 if __name__ == '__main__':
-    if not os.path.exists('database.db'):
-        conn = sqlite3.connect('database.db')
-        c = conn.cursor()
-        c.execute('''
-            CREATE TABLE IF NOT EXISTS itens (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nome TEXT NOT NULL,
-                quantidade INTEGER NOT NULL,
-                status TEXT NOT NULL DEFAULT 'Disponível'
-            )
-        ''')
-        conn.commit()
-        conn.close()
-
+    init_db()
     app.run(debug=True)
-
