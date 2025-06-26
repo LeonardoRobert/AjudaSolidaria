@@ -64,5 +64,19 @@ def excluir_item(item_id):
     return jsonify({"message": "Item excluído com sucesso!"})
 
 if __name__ == '__main__':
-    init_db()
-    app.run(host='0.0.0.0', port=5000)
+    if not os.path.exists('database.db'):
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        c.execute('''
+            CREATE TABLE IF NOT EXISTS itens (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome TEXT NOT NULL,
+                quantidade INTEGER NOT NULL,
+                status TEXT NOT NULL DEFAULT 'Disponível'
+            )
+        ''')
+        conn.commit()
+        conn.close()
+
+    app.run(debug=True)
+
