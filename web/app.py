@@ -1,8 +1,11 @@
-from flask import Flask, render_template, request, jsonify
+# app.py
+
+from flask import Flask, render_template, request, redirect, jsonify
 import sqlite3
 import os
 
 app = Flask(__name__)
+
 
 def init_db():
     if not os.path.exists('database.db'):
